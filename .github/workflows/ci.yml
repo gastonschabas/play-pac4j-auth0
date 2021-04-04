@@ -1,0 +1,52 @@
+name: Continious Integration
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  pre_job:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'never'
+          paths_ignore: '["**.md"]'
+  build:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Cache SBT
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+      - name: Setup Scala
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Test with Coverage / Static code analyse / Code style
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sbt \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.organization=gastonschabas \
+          -Dsonar.projectKey=gastonschabas_play-pac4j-auth0 \
+          -Dsonar.sources=src/main/scala \
+          -Dsonar.tests=src/test/scala \
+          -Dsonar.scala.scalastyle.reportPaths=target/scalastyle-result.xml \
+          -Dsonar.scala.coverage.reportPaths=target/scala-2.13/scoverage-report/scoverage.xml \
+          clean compile coverage test it:test coverageReport scalastyle scalafmtCheckAll scalafmtSbtCheck sonarScan
