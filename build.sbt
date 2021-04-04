@@ -12,5 +12,8 @@ lazy val root = (project in file("."))
     version := "0.0.1",
     wartremoverErrors in (Compile, compile) ++= Warts.unsafe,
     wartremoverExcluded += baseDirectory.value / "target",
-    libraryDependencies += guice
+    libraryDependencies ++= Seq(
+      guice,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "it, test"
+    )
   )
