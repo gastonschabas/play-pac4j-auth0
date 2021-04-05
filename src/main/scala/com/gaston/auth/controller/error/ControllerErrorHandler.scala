@@ -14,7 +14,9 @@ class ControllerErrorHandler extends HttpErrorHandler with Logging {
     statusCode: Int,
     message: String
   ): Future[Result] = {
-    Future.successful(Status(statusCode)("A client error occurred: " + message))
+    Future.successful(
+      Status(statusCode)(ControllerErrorHandler.onClientErrorMessage + message)
+    )
   }
 
   def onServerError(
@@ -26,4 +28,8 @@ class ControllerErrorHandler extends HttpErrorHandler with Logging {
       InternalServerError
     }
   }
+}
+
+object ControllerErrorHandler {
+  val onClientErrorMessage = "A client error occurred: "
 }
