@@ -1,1 +1,3 @@
-GET  /              com.gaston.auth.Hello.index
+GET  /              com.gaston.auth.controller.SecuredController.unsecuredEndpoint
+GET  /read          com.gaston.auth.controller.SecuredController.securedEndpointWithReadPermission
+POST /write         com.gaston.auth.controller.SecuredController.securedEndpointWithWritePermission
