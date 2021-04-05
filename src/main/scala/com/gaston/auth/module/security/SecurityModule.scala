@@ -15,7 +15,11 @@ import org.pac4j.jwt.config.signature.RSASignatureConfiguration
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
 import org.pac4j.jwt.util.JWKHelper
 import org.pac4j.play.scala.{DefaultSecurityComponents, SecurityComponents}
-import org.pac4j.play.store.{PlayCookieSessionStore, PlaySessionStore, ShiroAesDataEncrypter}
+import org.pac4j.play.store.{
+  PlayCookieSessionStore,
+  PlaySessionStore,
+  ShiroAesDataEncrypter
+}
 import play.api.{Configuration, Environment, Logging}
 
 import java.net.URL
@@ -24,7 +28,7 @@ import java.security.KeyPair
 import scala.jdk.CollectionConverters._
 
 class SecurityModule(environment: Environment, configuration: Configuration)
-  extends AbstractModule
+    extends AbstractModule
     with Logging {
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
@@ -65,8 +69,14 @@ class SecurityModule(environment: Environment, configuration: Configuration)
   def provideConfig(directBearerAuthClient: DirectBearerAuthClient): Config = {
     val clients = new Clients(directBearerAuthClient, new AnonymousClient())
     val config = new Config(clients)
-    config.addAuthorizer("read", new RequireAnyPermissionAuthorizer[CommonProfile]("pac4j:read"))
-    config.addAuthorizer("write", new RequireAnyPermissionAuthorizer[CommonProfile]("pac4j:write"))
+    config.addAuthorizer(
+      "read",
+      new RequireAnyPermissionAuthorizer[CommonProfile]("pac4j:read")
+    )
+    config.addAuthorizer(
+      "write",
+      new RequireAnyPermissionAuthorizer[CommonProfile]("pac4j:write")
+    )
     config.setHttpActionAdapter(DemoHttpActionAdapter)
     config
   }

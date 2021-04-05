@@ -8,7 +8,12 @@ import java.util.Optional
 
 object CommonProfileAuthorizationGenerator extends AuthorizationGenerator {
 
-  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements", "org.wartremover.warts.AsInstanceOf"))
+  @SuppressWarnings(
+    Array(
+      "org.wartremover.warts.NonUnitStatements",
+      "org.wartremover.warts.AsInstanceOf"
+    )
+  )
   override def generate(
     context: WebContext,
     profile: UserProfile

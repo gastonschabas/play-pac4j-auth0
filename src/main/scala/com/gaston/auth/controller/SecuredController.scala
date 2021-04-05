@@ -24,7 +24,10 @@ class SecuredController @Inject() (val controllerComponents: SecurityComponents)
       jsonResponse(request, "write")
     }
 
-  private def jsonResponse(request: AuthenticatedRequest[AnyContent], permission: String): Result = Ok(
+  private def jsonResponse(
+    request: AuthenticatedRequest[AnyContent],
+    permission: String
+  ): Result = Ok(
     Json.obj(
       "profile" -> request.profiles.toString,
       "msg" -> s"Hello endpoint with $permission permission"
