@@ -1,2 +1,2 @@
-# play-pac4j-auth0
-Integration between play framework, pac4j and auth0
+# play-pac4j-jwt
+Integration between play framework, pac4j and JWTs
